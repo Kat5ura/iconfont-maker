@@ -1,0 +1,21 @@
+{
+  "name": "iconfont-maker",
+  "version": "0.0.1",
+  "description": "This is a iconfont maker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "iconfont",
+    "svg",
+    "font",
+    "maker"
+  ],
+  "author": "Kat5ura",
+  "license": "MIT",
+  "dependencies": {
+    "node-glob": "^1.2.0",
+    "webfonts-generator": "^0.4.0"
+  }
+}
