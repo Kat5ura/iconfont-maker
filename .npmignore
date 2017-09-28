@@ -2,3 +2,4 @@
 .idea
 .git
 .gitignore
+npm-debug.log

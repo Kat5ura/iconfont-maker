@@ -13,6 +13,7 @@
     "maker"
   ],
   "author": "Kat5ura",
+  "repository": "https://github.com/Kat5ura/iconfont-maker",
   "license": "MIT",
   "dependencies": {
     "node-glob": "^1.2.0",
