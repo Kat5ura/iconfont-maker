@@ -1,5 +1,4 @@
-# Created by .ignore support plugin (hsz.mobi)
 .idea
-.git
-.gitignore
 npm-debug.log
+test
+.gitignore
