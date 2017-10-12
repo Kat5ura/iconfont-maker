@@ -46,27 +46,26 @@ let iconfont = function (options, done) {
 	let svgoOpt = options.svgo || {};
 
 	let plugins = Object.assign({}, defaultPluginList, svgoOpt.plugins || {});
-	svgoOpt.plugins = Object.keys(plugins).map( p => {
+	svgoOpt.plugins = Object.keys(plugins).map(p => {
 		return {[p]: plugins[p]};
 	});
 
 	let svgOptimize = new svgo(options.svgo || {});
 
-	if(options.optimize){
+	if (options.optimize) {
 		console.log('Optimizing svg icons...');
-		optimize(options.files).then( (nFiles) => {
+		optimize(options.files).then((nFiles) => {
 			console.log('Optimizing done!');
 			options.files = nFiles;
 			console.log('Making iconfont...');
 			generator(options, function (err, res) {
 				console.log('Making done!');
-				cleanTmp();
 				Object.prototype.toString.apply(done) === '[object Function]' && done(err, res);
+				cleanTmp();
 			});
 		});
-	}else {
+	} else {
 		generator(options, function (err, res) {
-			cleanTmp();
 			Object.prototype.toString.apply(done) === '[object Function]' && done(err, res);
 		});
 	}
@@ -75,7 +74,7 @@ let iconfont = function (options, done) {
 		let defer = Q.defer();
 
 		svgOptimize.optimize(svgStr, res => {
-			if(res.error) {
+			if (res.error) {
 				defer.reject(res.error);
 			} else {
 				defer.resolve(res.data);
@@ -86,11 +85,11 @@ let iconfont = function (options, done) {
 	}
 
 	function optimize (files) {
-		if(!fs.existsSync(iconTmpPath)) fs.mkdirSync(iconTmpPath);
+		if (!fs.existsSync(iconTmpPath)) fs.mkdirSync(iconTmpPath);
 		let defer = Q.defer();
 		let tasks = [];
 		let nFiles = [];
-		files.forEach( file => {
+		files.forEach(file => {
 			let fileName = path.basename(file);
 			let svgStr = fs.readFileSync(file, 'utf8');
 
@@ -98,10 +97,12 @@ let iconfont = function (options, done) {
 				let nFile = path.resolve(iconTmpPath, fileName);
 				nFiles.push(nFile);
 				fs.writeFileSync(nFile, res, 'utf8')
-			}, err => { console.log(err); }));
+			}, err => {
+				console.log(err);
+			}));
 		});
 
-		Q.all(tasks).spread( _ => {
+		Q.all(tasks).spread(_ => {
 			defer.resolve(nFiles);
 		}, reason => {
 			defer.reject(reason);
@@ -114,18 +115,18 @@ let iconfont = function (options, done) {
 function cleanTmp () {
 	console.log('Cleaning tmp dir...');
 	fs.readdir(iconTmpPath, (err, files) => {
-		if(err) {
+		if (err) {
 			console.log(err);
 			return;
 		}
 
-		files.forEach( file => {
+		files.forEach(file => {
 			let fullPath = path.resolve(iconTmpPath, file);
 			fs.unlinkSync(fullPath);
 		});
 
 		fs.rmdir(iconTmpPath, (err) => {
-			if(err){
+			if (err) {
 				console.log(err);
 			} else {
 				console.log('Tmp dir cleaned...');
