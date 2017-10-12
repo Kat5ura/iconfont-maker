@@ -6,6 +6,8 @@ const Q = require('q');
 const svgo = require('svgo/lib/svgo');
 const generator = require('webfonts-generator');
 
+let defaultPluginList = require('./svgo-plugins');
+
 const tmpdir = os.tmpdir();
 
 let iconTmpPath = path.resolve(tmpdir, 'iconfont');
@@ -39,6 +41,13 @@ let iconfont = function (options, done) {
 	options.files = allFiles.filter((file) => {
 		let reg = /\.svg$/ig;
 		return reg.test(file);
+	});
+
+	let svgoOpt = options.svgo || {};
+
+	let plugins = Object.assign({}, defaultPluginList, svgoOpt.plugins || {});
+	svgoOpt.plugins = Object.keys(plugins).map( p => {
+		return {[p]: plugins[p]};
 	});
 
 	let svgOptimize = new svgo(options.svgo || {});
