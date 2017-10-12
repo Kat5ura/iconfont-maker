@@ -8,7 +8,6 @@ const generator = require('webfonts-generator');
 
 const tmpdir = os.tmpdir();
 
-let svgOptimize = new svgo();
 let iconTmpPath = path.resolve(tmpdir, 'iconfont');
 console.log(iconTmpPath);
 
@@ -42,6 +41,8 @@ let iconfont = function (options, done) {
 		return reg.test(file);
 	});
 
+	let svgOptimize = new svgo(options.svgo || {});
+
 	if(options.optimize){
 		console.log('Optimizing svg icons...');
 		optimize(options.files).then( (nFiles) => {
@@ -60,46 +61,46 @@ let iconfont = function (options, done) {
 			Object.prototype.toString.apply(done) === '[object Function]' && done(err, res);
 		});
 	}
+
+	function svgOptimizePromise (svgStr) {
+		let defer = Q.defer();
+
+		svgOptimize.optimize(svgStr, res => {
+			if(res.error) {
+				defer.reject(res.error);
+			} else {
+				defer.resolve(res.data);
+			}
+		});
+
+		return defer.promise;
+	}
+
+	function optimize (files) {
+		if(!fs.existsSync(iconTmpPath)) fs.mkdirSync(iconTmpPath);
+		let defer = Q.defer();
+		let tasks = [];
+		let nFiles = [];
+		files.forEach( file => {
+			let fileName = path.basename(file);
+			let svgStr = fs.readFileSync(file, 'utf8');
+
+			tasks.push(svgOptimizePromise(svgStr).then(res => {
+				let nFile = path.resolve(iconTmpPath, fileName);
+				nFiles.push(nFile);
+				fs.writeFileSync(nFile, res, 'utf8')
+			}, err => { console.log(err); }));
+		});
+
+		Q.all(tasks).spread( _ => {
+			defer.resolve(nFiles);
+		}, reason => {
+			defer.reject(reason);
+		});
+
+		return defer.promise;
+	}
 };
-
-function svgOptimizePromise (svgStr) {
-	let defer = Q.defer();
-
-	svgOptimize.optimize(svgStr, res => {
-		if(res.error) {
-			defer.reject(res.error);
-		} else {
-			defer.resolve(res.data);
-		}
-	});
-
-	return defer.promise;
-}
-
-function optimize (files) {
-	if(!fs.existsSync(iconTmpPath)) fs.mkdirSync(iconTmpPath);
-	let defer = Q.defer();
-	let tasks = [];
-	let nFiles = [];
-	files.forEach( file => {
-		let fileName = path.basename(file);
-		let svgStr = fs.readFileSync(file, 'utf8');
-
-		tasks.push(svgOptimizePromise(svgStr).then(res => {
-			let nFile = path.resolve(iconTmpPath, fileName);
-			nFiles.push(nFile);
-			fs.writeFileSync(nFile, res, 'utf8')
-		}, err => { console.log(err); }));
-	});
-
-	Q.all(tasks).spread( _ => {
-		defer.resolve(nFiles);
-	}, reason => {
-		defer.reject(reason);
-	});
-
-	return defer.promise;
-}
 
 function cleanTmp () {
 	console.log('Cleaning tmp dir...');

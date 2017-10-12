@@ -269,6 +269,10 @@ iconfontMaker({
 })
 ```
 
+### svgo
+
+Options for [svgo](https://github.com/svg/svgo)
+
 ## Thanks
 
 - [webfonts-generator](https://github.com/sunflowerdeath/webfonts-generator). Thanks [@sunflowerdeath](https://github.com/sunflowerdeath)
