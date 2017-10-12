@@ -273,6 +273,11 @@ iconfontMaker({
 
 Options for [svgo](https://github.com/svg/svgo)
 
+## Related
+
+- [iconfont-maker-cli](https://github.com/Kat5ura/iconfont-maker-cli): CLI tool based on this maker
+- [iconfont-maker-desktop](https://github.com/Kat5ura/iconfont-maker-desktop): Desktop version tool
+
 ## Thanks
 
 - [webfonts-generator](https://github.com/sunflowerdeath/webfonts-generator). Thanks [@sunflowerdeath](https://github.com/sunflowerdeath)
