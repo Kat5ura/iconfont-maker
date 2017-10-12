@@ -1,6 +1,6 @@
 {
   "name": "iconfont-maker",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "This is a iconfont maker",
   "main": "index.js",
   "scripts": {
