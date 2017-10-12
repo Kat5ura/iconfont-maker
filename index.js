@@ -3,7 +3,7 @@ const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const Q = require('q');
-const svgo = require('./node_modules/svgo/lib/svgo');
+const svgo = require('svgo/lib/svgo');
 const generator = require('webfonts-generator');
 
 const tmpdir = os.tmpdir();
